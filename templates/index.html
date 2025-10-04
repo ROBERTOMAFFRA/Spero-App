@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spero Estimate Search</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        img { max-width: 150px; margin-bottom: 20px; }
+        input { width: 300px; padding: 8px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='Logo Spero.png') }}" alt="Spero Logo">
+    <h1>Spero Estimate Search</h1>
+    <input type="text" id="searchBox" placeholder="Digite ex: drywall" onkeyup="search()">
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Old</th>
+                <th>Remove</th>
+                <th>Replace</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="results"></tbody>
+    </table>
+
+    <script>
+        async function search() {
+            let q = document.getElementById("searchBox").value;
+            let res = await fetch(`/search?q=${q}`);
+            let data = await res.json();
+            let tbody = document.getElementById("results");
+            tbody.innerHTML = "";
+            data.forEach(row => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td>${row.DESCRIPTION}</td>
+                                <td>${row.OLD || ""}</td>
+                                <td>${row.REMOVE || ""}</td>
+                                <td>${row.REPLACE || ""}</td>
+                                <td>${row.TOTAL || ""}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
